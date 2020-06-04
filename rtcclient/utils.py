@@ -3,6 +3,7 @@ import functools
 from xml.parsers.expat import ExpatError
 import xmltodict
 from rtcclient.exception import RTCException
+from lxml import etree
 
 
 def setup_basic_logging():
@@ -42,3 +43,11 @@ def token_expire_handler(func):
                     raise ExpatError(excp)
 
     return wrapper
+	
+def remove_empty_elements(docs):
+    root = etree.fromstring(bytes(docs, 'utf-8'))
+    for element in root.xpath("//*[not(node())]"):
+        if "rdf:resource" not in str(etree.tostring(element)):
+            element.getparent().remove(element)
+ 
+    return etree.tostring(root)

@@ -1069,7 +1069,7 @@ class RTCClient(RTCBase):
         wi_url_post = "/".join([self.url,
                                 "oslc/contexts",
                                 projectarea_id,
-                                "workitems/%s" % itemtype.identifier])
+                                "workitems/%s" % itemtype.identifier.lower()])
         return self._createWorkitem(wi_url_post, wi_raw)
 
     def copyWorkitem(self, copied_from, title=None, description=None,
@@ -1098,13 +1098,13 @@ class RTCClient(RTCBase):
             if prefix is not None:
                 description = prefix + description
 
-        self.log.info("Start to create a new <Workitem>, copied from ",
+        self.log.info("Start to create a new <Workitem>, copied from "
                       "<Workitem %s>", copied_from)
 
         wi_url_post = "/".join([self.url,
                                 "oslc/contexts/%s" % copied_wi.contextId,
                                 "workitems",
-                                "%s" % copied_wi.type.split("/")[-1]])
+                                "%s" % copied_wi.type.lower()])
         wi_raw = self.templater.renderFromWorkitem(copied_from,
                                                    keep=True,
                                                    encoding="UTF-8",
